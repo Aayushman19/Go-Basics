@@ -23,7 +23,13 @@ func main(){
 		fmt.Println("Error occured ", err)
 	})
 
-	collector.OnHTML("h1", func(h *colly.HTMLElement) {
+	var element string
+
+	fmt.Println("Enter the html tag you want to scrape")
+	fmt.Scan(&element)
+
+
+	collector.OnHTML(element, func(h *colly.HTMLElement) {
 		fmt.Println(h.DOM.Html())
 	})
 
