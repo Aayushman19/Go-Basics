@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
+
 	"github.com/gocolly/colly"
 )
 
@@ -10,6 +12,20 @@ func main(){
 	args := os.Args
 	url := args[1]
 	collector := colly.NewCollector()
+
+	dict, err := os.Create("testfile.txt")
+
+	if err != nil{
+		log.Panic(err)
+	}
+
+	line, err := dict.WriteString("File starts here")
+
+	if err != nil{
+		panic(err)
+	}
+
+	fmt.Println(line)
 
 	collector.OnRequest(func(r *colly.Request) {
 		fmt.Println("Visiting", r.URL)
@@ -30,7 +46,12 @@ func main(){
 
 
 	collector.OnHTML(element, func(h *colly.HTMLElement) {
-		fmt.Println(h.DOM.Html())
+		var str = h.DOM.Text()
+		temp, err := dict.WriteString(str)
+		if err != nil{
+			panic(err)
+		}
+		fmt.Println(temp)
 	})
 
 	collector.Visit(url)
